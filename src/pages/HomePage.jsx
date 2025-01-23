@@ -1,10 +1,11 @@
-const HomePage = () => {
+import TopScholarships from "../components/TopScholarships";
 
+const HomePage = () => {
   return (
     <div>
-       <h1>This is HomePage component</h1>
+      <TopScholarships />
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;

@@ -5,14 +5,32 @@ import {
   DropdownHeader,
   DropdownItem,
   Navbar,
-  NavbarBrand,
   NavbarCollapse,
   NavbarLink,
   NavbarToggle,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const { pathname } = useLocation();
+
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        navigate("/login");
+        toast.success("Logout successful");
+      })
+      .catch((err) => {
+        toast.error("Couldn't log out");
+      });
+  };
+
   return (
     <header className="sticky top-0 shadow">
       <nav className="container">
@@ -24,29 +42,40 @@ const Header = () => {
             <h3 className="text-xl font-bold">ScholarshipMania</h3>
           </Link>
           <div className="flex md:order-2">
-            <Dropdown
-              arrowIcon={false}
-              inline
-              label={
-                <Avatar
-                  alt="User settings"
-                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                  rounded
-                />
-              }
-            >
-              <DropdownHeader>
-                <span className="block text-sm">Bonnie Green</span>
-                <span className="block truncate text-sm font-medium">
-                  name@flowbite.com
-                </span>
-              </DropdownHeader>
-              <DropdownItem>Dashboard</DropdownItem>
-              <DropdownItem>Settings</DropdownItem>
-              <DropdownItem>Earnings</DropdownItem>
-              <DropdownDivider />
-              <DropdownItem>Sign out</DropdownItem>
-            </Dropdown>
+            {user ? (
+              <Dropdown
+                arrowIcon={false}
+                inline
+                label={
+                  <Avatar
+                    alt={user?.displayName}
+                    img={user?.photoURL}
+                    rounded
+                  />
+                }
+              >
+                <Dropdown.Header>
+                  <span className="block text-sm">{user?.displayName}</span>
+                  <span className="block truncate text-sm font-medium">
+                    {user.email}
+                  </span>
+                </Dropdown.Header>
+                <Link to="/add-artifact">
+                  <Dropdown.Item>Add Artifact</Dropdown.Item>
+                </Link>
+
+                <Link to="/my-artifacts">
+                  <Dropdown.Item>My Artifacts</Dropdown.Item>
+                </Link>
+
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+              </Dropdown>
+            ) : (
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            )}
             <NavbarToggle />
           </div>
           <NavbarCollapse>
