@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Dropdown,
   DropdownDivider,
   DropdownHeader,
@@ -73,7 +74,9 @@ const Header = () => {
               </Dropdown>
             ) : (
               <Link to="/login">
-                <Button>Login</Button>
+                <Button className="text-sm" gradientDuoTone="purpleToBlue">
+                  Login
+                </Button>
               </Link>
             )}
             <NavbarToggle />
